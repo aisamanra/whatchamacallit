@@ -1,0 +1,34 @@
+Whatchamacallit
+===============
+
+Miscellaneous command-line utilities to do various small tasks. They're split
+up into different libraries so they can be installed individually, but also
+kept in a single repo because they're all tiny.
+
+All these are licensed under the WTFPL.
+
+RSAPair/
+--------
+
+A single RSAPair executable that produces a hex-encoded public/private key
+pair on stdout. In Haskell; cabalized.
+
+EscapedString/
+-----------
+
+Reads in stdin and produces an escaped string on stdout with surrounding
+quotation marks, in particular by converting it to a JSON string and emitting
+it. In Haskell; cabalized.
+
+YAMLize/
+--------
+
+Two programs, one ToYAML which converts JSON on stdin to YAML on stdout, and
+one FromYAML, which goes vice versa. May not round-trip correctly because of
+the semantics of the GHC Yaml library. In Haskell; cabalized.
+
+expseq/
+-------
+
+A rough analogue of seq for generating exponentially increasing numbers rather
+than sequentially. In C; has Makefile.
