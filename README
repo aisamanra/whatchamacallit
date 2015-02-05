@@ -13,19 +13,12 @@ RSAPair/
 A single RSAPair executable that produces a hex-encoded public/private key
 pair on stdout. In Haskell; cabalized.
 
-EscapedString/
+escaped-string/
 -----------
 
 Reads in stdin and produces an escaped string on stdout with surrounding
-quotation marks, in particular by converting it to a JSON string and emitting
-it. In Haskell; cabalized.
-
-YAMLize/
---------
-
-Two programs, one ToYAML which converts JSON on stdin to YAML on stdout, and
-one FromYAML, which goes vice versa. May not round-trip correctly because of
-the semantics of the GHC Yaml library. In Haskell; cabalized.
+quotation marks, attempting to make it a valid JSON string. In C; has
+Makefile.
 
 expseq/
 -------
