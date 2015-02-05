@@ -1,0 +1,33 @@
+pkgname=whatchamacallit-escstring
+pkgver=0.0.1
+pkgrel=1
+pkgdesc="JSON-like string escaping."
+url="http://www.gdritter.com"
+arch=('x86_64' 'i686')
+license=('WTFPL')
+depends=('musl')
+optdepends=()
+makedepends=()
+conflicts=()
+replaces=()
+backup=()
+install=''
+source=('escstring.c'
+	    'escstring.1'
+        'Makefile')
+md5sums=('5d1bb6c729091c19bab98189d26a4772'
+	'a8031df89e9cbc0c565046f60a359837'
+	'e35cfdabe4de2c98895840f559a70bda')
+
+
+build() {
+  make
+}
+
+package() {
+  mkdir -p ${pkgdir}/usr/local/bin
+  mkdir -p ${pkgdir}/usr/local/man/man8
+  make prefix="${pkgdir}/usr/local" install
+  install -g 0 -o 0 -m 0644 escstring.1 ${pkgdir}/usr/local/man/man8/
+  gzip ${pkgdir}/usr/local/man/man8/escstring.1
+}

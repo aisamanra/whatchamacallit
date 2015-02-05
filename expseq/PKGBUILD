@@ -1,0 +1,28 @@
+pkgname=whatchamacallit-expseq
+pkgver=0.0.1
+pkgrel=1
+pkgdesc="Like seq but for exponentially increasing numbers."
+url="http://www.gdritter.com"
+arch=('x86_64' 'i686')
+license=('WTFPL')
+depends=('musl')
+optdepends=()
+makedepends=()
+conflicts=()
+replaces=()
+backup=()
+install=''
+source=('expseq.c'
+        'Makefile')
+md5sums=('7a9b9ee6b46525fffc5557efb28fd639'
+	'4f37c062e2b0057d6f454bfe61cc04a7')
+
+
+build() {
+  make
+}
+
+package() {
+  mkdir -p ${pkgdir}/usr/local/bin
+  make prefix="${pkgdir}/usr/local" install
+}
