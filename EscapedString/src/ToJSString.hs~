@@ -1,8 +1,0 @@
-module Main where
-
-import Control.Monad ((>=>))
-import Data.Aeson (Value(String))
-import Data.Text.IO (getContents)
-import Prelude hiding (getContents)
-
-main = getContents >>= putStrLn . show . String
