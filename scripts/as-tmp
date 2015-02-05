@@ -1,0 +1,5 @@
+#!/bin/sh
+
+FILENAME=$(mktemp)
+cat >$FILENAME
+echo $FILENAME
