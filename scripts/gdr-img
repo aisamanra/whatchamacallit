@@ -1,0 +1,3 @@
+#!/bin/sh
+
+scp $1 rosencrantz:/srv/http/gdr/www/imgs/.

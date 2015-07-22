@@ -1,0 +1,3 @@
+#!/bin/sh
+
+LIB_REPO=/home/gdritter/Projects/sites/lib-data /home/gdritter/Projects/sites/lib-static/utils/add-quip $@

@@ -1,0 +1,45 @@
+#!/bin/sh -e
+
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 package [package ...]" >&2
+    exit 1
+fi
+
+DIR=$(mktemp -d)
+PKG=Temporary
+
+touch $DIR/LICENSE
+
+cat >$DIR/$PKG.hs <<EOF
+module $PKG where
+EOF
+
+cat >$DIR/$PKG.cabal <<EOF
+name:           $PKG
+version:        0.0.0
+license:        OtherLicense
+license-file:   LICENSE
+cabal-version:  >= 1.10
+build-type:     Simple
+
+library
+  default-language: Haskell2010
+  exposed-modules: $PKG
+  build-depends: $1,
+EOF
+
+shift
+for DEP in $@; do
+    cat >>$DIR/$PKG.cabal <<EOF
+                 $DEP,
+EOF
+done
+cat >>$DIR/$PKG.cabal <<EOF
+                 base
+EOF
+
+cd $DIR
+cabal sandbox init
+cabal install
+cabal configure
+exec cabal repl

@@ -1,0 +1,20 @@
+#!/usr/bin/python
+
+import sys
+import yaml
+
+def comma(x, y):
+  if x:
+    return '{0},{1}'.format(x, y)
+  else:
+    return str(y)
+
+def print_obj(obj, lead=''):
+  if type(obj) == dict:
+    for k in obj:
+      print_obj(obj[k], comma(lead, k))
+  else:
+    print(comma(lead, obj))
+
+with open(sys.argv[1]) as f:
+  print_obj(yaml.load(f))

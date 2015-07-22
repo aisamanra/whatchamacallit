@@ -1,0 +1,27 @@
+#!/bin/sh
+
+if [ "$#" -lt "2"]; then
+	APPNAME=$(basename $0)
+	echo "USAGE: $APPNAME [input-file]"
+	exit 1
+fi
+
+if [[ "$1" = http* ]]; then
+	FILE=$(mktemp)
+	curl $1 >$FILE
+else
+	FILE="$1"
+fi
+
+if [[ $FILE = *pdf ]]; then
+	TMPF=$(mktemp)
+	pdf2ps $FILE $TMPF
+	
+elif [[ $FILE = *ps ]]; then
+	TMPF=$FILE
+else
+	echo "Unknown file type: $FILE"
+	exit 2
+fi
+
+cat $TMPF | psbook | psnup -pletter -2 | lpr -o sides=two-sided-short-edge -P hp4200n

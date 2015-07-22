@@ -1,0 +1,18 @@
+#!/bin/sh -e
+
+if [ "$#" -lt "1" ]; then
+	APPNAME=$(basename $0)
+	echo "not enough arguments to $APPNAME"
+	exit 1
+fi
+
+OPTS="-P hp4200n -o number-up=2 -o sides=two-sided-long-edge"
+
+if [[ "$1" = http* ]]; then
+	FILE=$(mktemp)
+	curl "$1" >$FILE
+	lpr $OPTS $FILE
+    rm $FILE
+else
+	lpr $OPTS "$1"
+fi

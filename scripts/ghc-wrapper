@@ -1,0 +1,85 @@
+#!/bin/bash -e
+
+# ghc wrapper script (for managing installed GHC versions)
+# this is a small script I use that allows multiple simultaneous ghc
+# installations. This makes the following assumptions about how
+# you want to set up your system:
+# - GHC version {X} is installed with prefix ~/install/ghc-${X}
+# - A file naming the current selected GHC version is placed
+#   at ~/.current-ghc
+# - cabal is configured to point to this script instead of ghc
+# - If using fetch, then mktemp must result in a directory to which
+#   this script can write, as well
+# This script is being run as a user that can read and modify things
+# in your $HOME directory.
+
+if [[ "$1" = "list" ]]; then
+    for f in $(ls ~/install/ | grep ghc); do
+        # It's possible (for various reasons) for /none/ of the
+        # current versions to be selected, in which case all of
+        # them will be prefixed by a -; otherwise, the one that
+        # is selected will be prefixed by a +.
+        if [[ "$f" = "$(cat ~/.current-ghc)" ]]; then
+            echo "+" $f
+        else
+            echo "-" $f
+        fi
+    done
+elif [[ "$1" = "set" ]]; then
+    MATCHES=($(ls ~/install | grep ghc | grep -e "$2"))
+    if [[ -z $MATCHES ]]; then
+        # There is nothing in ~/install that matches that version
+        echo "Unknown GHC version: $2"
+    elif [ "${#MATCHES[@]}" -eq "1" ]; then
+        # There is exactly one relevant match---we can use that one!
+        echo "Setting GHC version to $MATCHES"
+        echo $MATCHES >~/.current-ghc
+    else
+        # The regex given matches too many versions.
+        echo "Ambiguous GHC version: argument matches"
+        for f in "${MATCHES[@]}"; do
+            echo "  " $f
+        done
+    fi
+elif [[ "$1" = "fetch" ]]; then
+    VERSION="$2"
+    URL="https://www.haskell.org/ghc/dist/$VERSION/ghc-$VERSION-src.tar.xz"
+    LOC=$(mktemp -d)
+    (
+        echo "Attempting to fetch $URL..." &&
+        curl -L "$URL" >"$LOC/ghc.tar.xz" &&
+        cd "$LOC" &&
+        echo "...tarball fetched; unpacking..." &&
+        tar -xf "ghc.tar.xz" &&
+        cd "$LOC/ghc-$VERSION" &&
+        echo "Creating $HOME/install/ghc-$VERSION" &&
+        mkdir -p "$HOME/install/ghc-$VERSION" &&
+        ./configure --prefix="$HOME/install/ghc-$VERSION" &&
+        echo "... starting build process..." &&
+        make &&
+        make install &&
+        echo "...finished!"
+    )
+elif [[ "$1" = "--wrapper-help" ]]; then
+    cat <<EOF
+$0 [wrapper script]
+Usage:
+  $0 list              List installed versions of ghc
+  $0 set [regex]       Set current GHC to the version that uniquely
+                          matches the supplied regex
+  $0 fetch [version]   Fetch, build, and install the specified version
+                          of GHC. (Does not change the current version.)
+  $0 --wrapper-help    See this help menu
+  $0 [anything else]   Use GHC normally
+
+This wrapper script assumes that you'll always install your GHC versions
+to ~/install/ghc-{VERSION}, and will store the currently selected GHC version
+in ~/.current-ghc.
+
+WARNING: This script is quite brittle and makes a lot of assumptions about
+how you lay things out! While I suspect it shouldn't actively break anything,
+be careful about using it!
+EOF
+else
+   exec /home/gdritter/install/$(cat ~/.current-ghc)/bin/$(basename $0) "$@"
+fi

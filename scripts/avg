@@ -1,0 +1,6 @@
+#!/bin/python2
+
+import sys
+
+nums = [int(l) for l in sys.stdin.readlines()]
+print sum(nums) / float(len(nums))

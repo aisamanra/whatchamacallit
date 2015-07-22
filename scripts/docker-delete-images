@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [ "x$1" = "x--YES" ]; then
+  sudo docker rm $(sudo docker ps -a -q)
+  sudo docker rmi $(sudo docker images -a -q)
+else
+  echo "ARE YOU SURE YOU WANT TO DO THIS?"
+  echo "If so, re-run with --YES"
+fi

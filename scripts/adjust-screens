@@ -1,0 +1,35 @@
+#!/usr/bin/python2
+
+import subprocess
+import sys
+
+def invoke(args):
+    sys.stderr.write('invoke("{0}")\n'.format(' '.join(args)))
+    p = subprocess.Popen(args, stdout=subprocess.PIPE)
+    return p.stdout.readlines()
+
+disps = set()
+for x in invoke(['xrandr']):
+    if x and not x[0].isspace():
+        cdisp = x.split()[0]
+    else:
+        disps.add(cdisp)
+
+if disps:
+    sys.stderr.write("connected displays: {0}\n".format(', '.join(disps)))
+
+if len(disps) <= 0:
+    sys.stderr.write("no displays connected.\n")
+    sys.exit(1)
+elif len(disps) == 1:
+    args = ['xrandr', '--auto']
+    invoke(args)
+elif len(disps) == 2:
+    other = (disps ^ set(['LVDS1'])).pop()
+    invoke(['xrandr', '--output', 'LVDS1', '--primary', '--left-of',
+            other, '--output', other, '--auto'])
+else:
+    sys.stderr.write("more than two connected displays;\n")
+    sys.stderr.write("unsure how to continue\n")
+    sys.exit(1)
+invoke(['/home/gdritter/Pictures/ghibli/rand.sh'])

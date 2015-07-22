@@ -1,0 +1,4 @@
+#!/bin/sh
+
+THEME=solarized-dark TWIT=true BARE=true emacs
+

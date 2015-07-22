@@ -1,0 +1,19 @@
+#!/bin/sh
+
+if [ "$#" -lt "2" ]; then
+	APPNAME=$(basename $0)
+	echo "USAGE: $APPNAME [input pdf] [output pdf]"
+	exit 1
+fi
+
+IN=$1
+OUT=$2
+
+echo "Optimizing $IN for screen resolution, and saving to $OUT."
+
+gs -o $OUT                      \
+   -dNOPAUSE                    \
+   -sDEVICE=pdfwrite            \
+   -dCompatibilityLevel=1.4     \
+   -dPDFSETTINGS=/screen        \
+   $IN
