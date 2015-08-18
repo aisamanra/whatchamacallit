@@ -1,0 +1,8 @@
+#!/bin/bash -e
+
+if [[ $# -eq 1 ]]; then cd $1; fi
+
+REPO=$(basename $(pwd))
+TIME=$(date -Iseconds)
+git add-untracked-sources
+git commit -a -m "Updates for $REPO at $TIME"
