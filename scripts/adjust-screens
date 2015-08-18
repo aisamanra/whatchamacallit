@@ -25,11 +25,11 @@ elif len(disps) == 1:
     args = ['xrandr', '--auto']
     invoke(args)
 elif len(disps) == 2:
-    other = (disps ^ set(['LVDS1'])).pop()
-    invoke(['xrandr', '--output', 'LVDS1', '--primary', '--left-of',
+    other = (disps ^ set(['eDP1'])).pop()
+    invoke(['xrandr', '--output', 'eDP1', '--primary', '--left-of',
             other, '--output', other, '--auto'])
 else:
     sys.stderr.write("more than two connected displays;\n")
     sys.stderr.write("unsure how to continue\n")
     sys.exit(1)
-invoke(['/home/gdritter/Pictures/ghibli/rand.sh'])
+# invoke(['/home/gdritter/Pictures/ghibli/rand.sh'])
