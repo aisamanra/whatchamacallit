@@ -2,5 +2,5 @@
 
 import sys
 
-nums = [int(l) for l in sys.stdin.readlines()]
+nums = [float(l) for l in sys.stdin.read().split()]
 print sum(nums) / float(len(nums))
