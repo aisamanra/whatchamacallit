@@ -1,0 +1,48 @@
+#!/bin/bash -e
+
+if [ $# -lt 1 ]; then
+	echo "USAGE: $0 [library name]" >&2
+	exit 99
+elif [ $# -eq 1 ]; then
+	LIBNAME="$1"
+	TGT='-'
+elif [ $# -eq 2 ]; then
+	LIBNAME="$1"
+	TGT="$2"
+fi
+
+NAME=$(git config user.name)
+EMAIL=$(git config user.email)
+USER="${NAME} <${EMAIL}>"
+YEAR=$(date '+%Y')
+
+function cabal_file {
+	cat <<EOF
+name:             ${LIBNAME}
+version:          0.1.0.0
+-- synopsis:
+-- description:
+license:          BSD3
+license-file:     LICENSE
+author:           ${USER}
+maintainer:       ${USER}
+copyright:        ©${YEAR} ${NAME}
+-- category:
+build-type:       Simple
+cabal-version:    >= 1.12
+
+library
+--  exposed-modules:
+  ghc-options:         -Wall
+  build-depends:       base >=4.7 && <4.9
+  default-language:    Haskell2010
+  default-extensions:  OverloadedStrings,
+                       ScopedTypeVariables
+EOF
+}
+
+if [ "x${TGT}" = "x-" ]; then
+	cabal_file
+else
+	cabal_file >${TGT}
+fi
