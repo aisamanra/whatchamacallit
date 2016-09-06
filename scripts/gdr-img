@@ -1,3 +1,5 @@
 #!/bin/sh
 
-scp $1 rosencrantz:/srv/http/gdr/www/imgs/.
+for f in $@; do
+    scp $f rosencrantz:/srv/http/gdr/www/imgs/.
+done
