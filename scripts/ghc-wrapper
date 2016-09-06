@@ -80,6 +80,14 @@ WARNING: This script is quite brittle and makes a lot of assumptions about
 how you lay things out! While I suspect it shouldn't actively break anything,
 be careful about using it!
 EOF
+elif [ ! -e ~/.current-ghc ]; then
+    # we haven't run this script before and don't have a .current-ghc, and
+    # we rely on having a binary _somewhere_, so let's use a default one
+    exec /usr/bin/ghc "$@"
+elif [ ! -e /home/gdritter/install/$(cat ~/.current-ghc)/bin/$(basename $0) ]; then
+    # we HAVE a .current-ghc but it doesn't exist, so let's also default to
+    # the one in /usr/bin
+    exec /usr/bin/ghc "$@"
 else
    exec /home/gdritter/install/$(cat ~/.current-ghc)/bin/$(basename $0) "$@"
 fi
