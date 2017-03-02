@@ -1,0 +1,22 @@
+#!/bin/bash -e
+
+FILE=$(mktemp)
+if [ $# -lt 1 ]; then
+    INP="-"
+else
+    INP="$1"
+    shift
+fi
+
+if [ x"$1" = x--github ]; then
+    FMT="markdown_github"
+elif [ x"$1" = x--rst ]; then
+    FMT="rst"
+else
+    FMT="markdown"
+fi
+
+echo "format: $FMT; source: $INP; tmp location: $FILE"
+pandoc --standalone -f $FMT -i $INP -t html -o $FILE
+surf $FILE
+rm $FILE
