@@ -39,7 +39,5 @@ cat >>$DIR/$PKG.cabal <<EOF
 EOF
 
 cd $DIR
-cabal sandbox init
-cabal install
-cabal configure
-exec cabal repl
+cabal new-build
+exec cabal new-repl

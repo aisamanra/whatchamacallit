@@ -1,0 +1,40 @@
+#!/usr/bin/python
+
+import os
+import sys
+import json
+import yaml
+
+
+def die(msg, *args):
+    sys.stderr.write(msg + '\n', *args)
+    sys.exit(99)
+
+
+def emit(datum, root='./'):
+    if type(datum) is not dict:
+        die("Unexpected type: {0} of type {1}", datum, type(datum))
+    else:
+        for key, val in datum.items():
+            if type(val) is dict:
+                new_root = os.path.join(root, key)
+                os.makedir(new_root)
+                emit(val, root=new_root)
+            elif type(val) is list:
+                die("Cannot serialize lists: {0}", datum)
+            elif type(val) is str or type(val) is unicode:
+                with open(os.path.join(root, key), 'w') as f:
+                    f.write(val)
+                    f.write('\n')
+            else:
+                with open(os.path.join(root, key), 'w') as f:
+                    json.dump(val, f)
+                    f.write('\n')
+
+if __name__ == '__main__':
+    if sys.argv[:1] and sys.argv[1] != '-':
+        with open(sys.argv[1]) as f:
+            datum = yaml.load(f)
+    else:
+        datum = yaml.load(sys.stdin)
+    emit(datum)
