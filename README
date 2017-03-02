@@ -5,13 +5,7 @@ Miscellaneous command-line utilities to do various small tasks. They're split
 up into different libraries so they can be installed individually, but also
 kept in a single repo because they're all tiny.
 
-All these are licensed under the WTFPL.
-
-RSAPair/
---------
-
-A single RSAPair executable that produces a hex-encoded public/private key
-pair on stdout. In Haskell; cabalized.
+All these are licensed under the WTFPL unless noted otherwise.
 
 escaped-string/
 -----------
@@ -25,3 +19,14 @@ expseq/
 
 A rough analogue of seq for generating exponentially increasing numbers rather
 than sequentially. In C; has Makefile.
+
+json2bencode/
+-------------
+
+What it says on the tin. In Haskell.
+
+scripts/
+--------
+
+Random scripts, several of them not useful to anyone else, some of them probably
+quite useful. A mixed bag.
