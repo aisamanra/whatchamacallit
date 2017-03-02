@@ -10,7 +10,7 @@ elif [ $# -eq 2 ]; then
 	EXENAME="$1"
 	TGT="$2"
 else
-	echo "USAGE: $0 [library name]" >&2
+	echo "USAGE: $0 [executable name]" >&2
 	exit 99
 fi
 
@@ -19,26 +19,38 @@ EMAIL=$(git config user.email)
 USER="${NAME} <${EMAIL}>"
 YEAR=$(date '+%Y')
 
-if [ "${CATEGORY}x" = "x" ]; then
-	CAT_LINE="-- category:"
+if [ -z "${CATEGORY}" ]; then
+    CAT_FIELD="-- category:"
 else
-	CAT_LINE="category:         ${CATEGORY}"
+    CAT_FIELD="category:         ${CATEGORY}"
+fi
+
+if [ -z "${SYNOPSIS}" ]; then
+    SYN_FIELD="-- synopsis:"
+else
+    SYN_FIELD="synopsis:         ${SYNOPSIS}"
+fi
+
+if [ -z "${DESCRIPTION}" ]; then
+    DESCR_FIELD="-- description:"
+else
+    DESCR_FIELD="description:      ${DESCRIPTION}"
 fi
 
 function cabal_file {
 	cat <<EOF
 name:             ${EXENAME}
 version:          0.1.0.0
--- synopsis:
--- description:
+${SYN_FIELD}
+${DESCR_FIELD}
 license:          BSD3
 license-file:     LICENSE
 author:           ${USER}
 maintainer:       ${USER}
 copyright:        ©${YEAR} ${NAME}
-${CAT_LINE}
+${CAT_FIELD}
 build-type:       Simple
-cabal-version:    >= 1.12
+cabal-version:    >= 1.14
 
 executable ${EXENAME}
   hs-source-dirs:      src
@@ -46,7 +58,7 @@ executable ${EXENAME}
   default-extensions:  OverloadedStrings,
                        ScopedTypeVariables
   ghc-options:         -Wall
-  build-depends:       base >=4.7 && <4.9
+  build-depends:       base >=4.7 && <4.10
   default-language:    Haskell2010
 EOF
 }
