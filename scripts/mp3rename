@@ -1,0 +1,45 @@
+#!/usr/bin/python2
+
+import eyed3
+
+import sys
+
+def err(*args):
+    sys.stderr.write(" ".join(args) + "\n")
+
+def die(*args):
+    err(*args)
+    sys.exit(1)
+
+USAGE='Usage: {0} [file]'.format(sys.argv[0])
+
+def to_file_case(name):
+    for ch in name:
+        if ord(ch) > 127:
+            err("ERROR: {0} outside ASCII range".format(ord(ch)))
+            raise Exception("NonAsciiName")
+    return '_'.join(name.lower().split())
+
+filenames = sys.argv[1:]
+
+if not filenames:
+    die(USAGE)
+
+def do_rename(filename):
+    audiofile = eyed3.load(filename)
+
+    (tn,_) = audiofile.tag.track_num
+    if tn is None:
+        err("ERROR: Unknown track number for file `{0}'".format(filename))
+
+    title = audiofile.tag.title
+    newname = '{0:02}_-_{1}'.format(tn, to_file_case(title))
+
+    print "renaming: `{0}' -> `{1}'".format(filename, newname)
+    audiofile.rename(newname)
+
+for f in filenames:
+    try:
+        do_rename(f)
+    except:
+        err("ERROR: Unable to rename `{0}'".format(f))
