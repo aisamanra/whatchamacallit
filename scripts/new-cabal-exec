@@ -4,15 +4,15 @@ if [ $# -gt 0 ]; then
     NAME="$1"
 	shift
 else
-    NAME="$(basename $(pwd))"
+    NAME="$(basename "$(pwd)")"
 fi
 
-VERSION="$(cat *.cabal | grep -e '^version' | grep -o -e '[0-9.]*')"
+VERSION="$(cat ./*.cabal | grep -e '^version' | grep -o -e '[0-9.]*')"
 PROGRAM="$(find dist-newstyle -type f -executable -name "$NAME" | grep -e "${VERSION}" | head -n 1)"
 
 
 if [ ! "${PROGRAM}" = "" ]; then
-	exec "${PROGRAM}" $@
+	exec "${PROGRAM}" "$@"
 else
 	echo "cannot find executable: ${NAME}-${VERSION}" >&2
 	exit 99
